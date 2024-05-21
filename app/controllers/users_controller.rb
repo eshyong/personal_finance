@@ -5,6 +5,8 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new(user_params)
+    @user.stripe_customer_id = Stripe::Customer.create(email: @user.email).id
+
     if @user.save
       @user.send_confirmation_email!
       redirect_to root_path, notice: "A confirmation email has been sent to your registered email."

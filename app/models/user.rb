@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   has_secure_password
   before_save :downcase_email
+  before_destroy :delete_stripe_customer
 
   validates :email, presence: true
   validates_format_of :email, with: URI::MailTo::EMAIL_REGEXP
@@ -28,5 +29,9 @@ class User < ApplicationRecord
 
   def downcase_email
     self.email = email.downcase
+  end
+
+  def delete_stripe_customer
+    Stripe::Customer.delete(stripe_customer_id)
   end
 end

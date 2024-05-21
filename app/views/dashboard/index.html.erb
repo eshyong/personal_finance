@@ -1,3 +1,52 @@
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+const stripe = Stripe(
+<% if Rails.env.production? %>
+  "pk_live_51PIPypB3ZILrcpM2KTRSSFLrYOv6g69rjVUw5Lr574BIhk3lRSy6YbVysdqoV2bulrwIbUQ3thtX2bBfMrbe8Iww0042RR31ko"
+<% else %>
+  "pk_test_51PIPypB3ZILrcpM2h8dGdfrdqJ4DlyymaN9DS5LeRJdZZOkBZuhq1FHEWZJA5pXLQURIQVNhLonFI6SDGZVzkNAu00KsBhOu5P"
+<% end %>
+);
+</script>
+
 <%= render "shared/navbar" %>
+
 <h1>Dashboard</h1>
 <p>Welcome, <%= current_user.email %></p>
+
+<button type="button">Link bank accounts</button>
+<script>
+  const button = document.querySelector("button");
+  const linkAccountsUrl = "<%= link_accounts_path %>";
+  const csrfToken = document.head.querySelector("meta[name=csrf-token]")?.content;
+
+  button.addEventListener("click", linkBankAccounts);
+
+  function linkBankAccounts() {
+    fetch(linkAccountsUrl, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "X-CSRF-Token": csrfToken,
+      }
+    })
+    .then((response) => response.json())
+    .then((data) => {
+      stripe.collectFinancialConnectionsAccounts({
+        clientSecret: data.client_secret,
+      })
+      .then((result) => {
+        if (result.error) {
+          // Inform the customer that there was an error.
+          console.log(result.error.message);
+
+        // Handle next step based on length of accounts array
+        } else if (result.financialConnectionsSession.accounts.length === 0) {
+          console.log('No accounts were linked');
+        } else {
+          console.log(result.financialConnectionsSession.accounts)
+        }
+      });
+    });
+  }
+</script>

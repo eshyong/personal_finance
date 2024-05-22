@@ -3,7 +3,7 @@ class User < ApplicationRecord
   before_save :downcase_email
   before_destroy :delete_stripe_customer
 
-  has_many :financial_accounts
+  has_many :financial_accounts, dependent: :destroy
 
   validates :email, presence: true
   validates_format_of :email, with: URI::MailTo::EMAIL_REGEXP
@@ -34,6 +34,10 @@ class User < ApplicationRecord
   end
 
   def delete_stripe_customer
-    Stripe::Customer.delete(stripe_customer_id)
+    begin
+      Stripe::Customer.delete(stripe_customer_id)
+    rescue Stripe::InvalidRequestError
+      # Customer may have been deleted already
+    end
   end
 end

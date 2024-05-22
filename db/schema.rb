@@ -10,9 +10,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_21_212551) do
-  create_table "financial_accounts", force: :cascade do |t|
-    t.integer "user_id", null: false
+ActiveRecord::Schema[7.1].define(version: 2024_05_22_162301) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
+  enable_extension "plpgsql"
+
+  create_table "financial_accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "user_id", null: false
     t.string "institution_name"
     t.bigint "balance"
     t.string "category"
@@ -24,7 +28,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_21_212551) do
     t.index ["user_id"], name: "index_financial_accounts_on_user_id"
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
     t.datetime "created_at", null: false

@@ -17,16 +17,21 @@ class StripeController < ApplicationController
   end
 
   def webhooks
-    payload = request.body.string
+    payload = request.body.read
+    sig_header = request.env["HTTP_STRIPE_SIGNATURE"]
     event = nil
 
     begin
-      event = Stripe::Event.construct_from(
-        JSON.parse(payload, symbolize_names: true)
+      event = Stripe::Webhook.construct_event(
+        payload, sig_header, webhook_endpoint_secret
       )
     rescue JSON::ParserError => e
       # Invalid payload
-      logger.error("received invalid webhook event: #{e}")
+      logger.error("received invalid webhook event: #{e.message}")
+      return head :bad_request
+    rescue Stripe::SignatureVerificationError => e
+      # Invalid signature
+      logger.error("error verifying webhook signature: #{e.message}")
       return head :bad_request
     end
 
@@ -36,26 +41,13 @@ class StripeController < ApplicationController
       user = User.where(stripe_customer_id: object.account_holder.customer).first
 
       unless user.present?
-        logger.warn("couldn't find user with stripe customer ID: #{object.account_holder.customer}")
+        logger.warn("couldn't find user with stripe customer ID: #{object.account_holder.customer}, skipping event")
         return head :ok
-      end
-
-      balance = case object.balance&.type
-      when "cash"
-        object.balance.cash
-      when "credit"
-        object.balance.credit
-      when nil
-        nil
-      else
-        logger.warn("invalid balance type: #{object.balance.type}")
-        nil
       end
 
       account = FinancialAccount.new(
         user_id: user.id,
         institution_name: object.institution_name,
-        balance: balance,
         category: object.category,
         subcategory: object.subcategory,
         last4: object.last4,
@@ -64,11 +56,20 @@ class StripeController < ApplicationController
 
       account.save!
 
-      # TODO: kick off job to fetch transactions
+      # TODO: kick off job to fetch balance/transactions data
     else
-      logger.warn("unsupported event type: #{event.type}")
+      logger.warn("unhandled event type: #{event.type}")
     end
 
     head :ok
+  end
+
+  private
+  def webhook_endpoint_secret
+    if Rails.env.production?
+      Rails.application.credentials.stripe.live_webhook_endpoint_secret!
+    else
+      Rails.application.credentials.stripe.test_webhook_endpoint_secret!
+    end
   end
 end

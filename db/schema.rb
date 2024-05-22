@@ -10,7 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_21_063241) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_21_212551) do
+  create_table "financial_accounts", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.string "institution_name"
+    t.bigint "balance"
+    t.string "category"
+    t.string "subcategory"
+    t.string "last4"
+    t.string "stripe_financial_connections_account_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_financial_accounts_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "password_digest"
@@ -22,4 +35,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_21_063241) do
     t.index ["stripe_customer_id"], name: "index_users_on_stripe_customer_id", unique: true
   end
 
+  add_foreign_key "financial_accounts", "users"
 end

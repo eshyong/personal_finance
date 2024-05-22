@@ -3,6 +3,8 @@ class User < ApplicationRecord
   before_save :downcase_email
   before_destroy :delete_stripe_customer
 
+  has_many :financial_accounts
+
   validates :email, presence: true
   validates_format_of :email, with: URI::MailTo::EMAIL_REGEXP
 

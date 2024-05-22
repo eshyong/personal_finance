@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  users: one
+  balance: 1
+  category: MyString
+  stripe_financial_connections_account_id: MyString
+  subcategory: MyString
+
+two:
+  users: two
+  balance: 1
+  category: MyString
+  stripe_financial_connections_account_id: MyString
+  subcategory: MyString

@@ -29,13 +29,44 @@ class StripeController < ApplicationController
       logger.error("received invalid webhook event: #{e}")
       return head :bad_request
     end
-    p event
 
     case event.type
     when "financial_connections.account.created"
-      # create new accounts for each stripe account linked
+      object = event.data.object
+      user = User.where(stripe_customer_id: object.account_holder.customer).first
+
+      unless user.present?
+        logger.warn("couldn't find user with stripe customer ID: #{object.account_holder.customer}")
+        return head :ok
+      end
+
+      balance = case object.balance&.type
+      when "cash"
+        object.balance.cash
+      when "credit"
+        object.balance.credit
+      when nil
+        nil
+      else
+        logger.warn("invalid balance type: #{object.balance.type}")
+        nil
+      end
+
+      account = FinancialAccount.new(
+        user_id: user.id,
+        institution_name: object.institution_name,
+        balance: balance,
+        category: object.category,
+        subcategory: object.subcategory,
+        last4: object.last4,
+        stripe_financial_connections_account_id: object.id,
+      )
+
+      account.save!
+
+      # TODO: kick off job to fetch transactions
     else
-      return render json: {"error": "unsupported event type #{event.type}"}, status: :bad_request
+      logger.warn("unsupported event type: #{event.type}")
     end
 
     head :ok

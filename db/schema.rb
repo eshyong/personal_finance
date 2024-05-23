@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_22_162301) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_23_093847) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -25,7 +25,25 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_162301) do
     t.string "stripe_financial_connections_account_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "last_transaction_refresh"
+    t.index ["stripe_financial_connections_account_id"], name: "idx_on_stripe_financial_connections_account_id_c62ed637c6", unique: true
     t.index ["user_id"], name: "index_financial_accounts_on_user_id"
+  end
+
+  create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "financial_account_id", null: false
+    t.bigint "amount"
+    t.string "currency"
+    t.string "description"
+    t.string "status"
+    t.string "stripe_transaction_id"
+    t.datetime "posted_at"
+    t.datetime "void_at"
+    t.datetime "transacted_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["financial_account_id"], name: "index_transactions_on_financial_account_id"
+    t.index ["stripe_transaction_id"], name: "index_transactions_on_stripe_transaction_id", unique: true
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -40,4 +58,5 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_22_162301) do
   end
 
   add_foreign_key "financial_accounts", "users"
+  add_foreign_key "transactions", "financial_accounts"
 end

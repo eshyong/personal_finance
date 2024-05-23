@@ -11,5 +11,7 @@ class CreateFinancialAccounts < ActiveRecord::Migration[7.1]
 
       t.timestamps
     end
+
+    add_index :financial_accounts, :stripe_financial_connections_account_id, unique: true
   end
 end

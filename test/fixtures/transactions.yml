@@ -1,0 +1,21 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  financial_account: one
+  amount: 
+  currency: MyString
+  description: MyString
+  status: MyString
+  posted_at: 2024-05-22 19:22:11
+  void_at: 2024-05-22 19:22:11
+  transacted_at: 2024-05-22 19:22:11
+
+two:
+  financial_account: two
+  amount: 
+  currency: MyString
+  description: MyString
+  status: MyString
+  posted_at: 2024-05-22 19:22:11
+  void_at: 2024-05-22 19:22:11
+  transacted_at: 2024-05-22 19:22:11

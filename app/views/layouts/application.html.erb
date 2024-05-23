@@ -9,6 +9,17 @@
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css"/>
+
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+    const stripe = Stripe(
+    <% if Rails.env.production? %>
+      "pk_live_51PIPypB3ZILrcpM2KTRSSFLrYOv6g69rjVUw5Lr574BIhk3lRSy6YbVysdqoV2bulrwIbUQ3thtX2bBfMrbe8Iww0042RR31ko"
+    <% else %>
+      "pk_test_51PIPypB3ZILrcpM2h8dGdfrdqJ4DlyymaN9DS5LeRJdZZOkBZuhq1FHEWZJA5pXLQURIQVNhLonFI6SDGZVzkNAu00KsBhOu5P"
+    <% end %>
+    );
+    </script>
   </head>
 
   <body>

@@ -1,5 +1,6 @@
 class FinancialAccount < ApplicationRecord
   belongs_to :user
+  has_many :transactions, dependent: :destroy
 
   before_destroy :disconnect_stripe_financial_connections_account
 

@@ -16,6 +16,11 @@ class UsersController < ApplicationController
     end
   end
 
+  def welcome
+    @user = User.new
+    render "home/welcome"
+  end
+
   private
 
   def user_params

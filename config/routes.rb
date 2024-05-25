@@ -8,8 +8,7 @@ Rails.application.routes.draw do
   root "dashboard#index"
   get "dashboard/index"
 
-  get "home/welcome"
-
+  get "home/welcome", to: "users#welcome"
   get "sign_up", to: "users#new", as: :sign_up
   post "sign_up", to: "users#create"
 

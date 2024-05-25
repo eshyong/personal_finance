@@ -1,36 +1,7 @@
+<%= render "shared/navbar" %>
+
 <% if flash[:alert] %>
   <div class="alert"><%= flash[:alert] %></div>
 <% end %>
 
-<h2>Sign up</h2>
-<%= form_with model: @user, url: sign_up_path do |form| %>
-  <label for="name">
-    Full Name
-    <%= form.text_field :name, required: true%>
-    <% @user.errors.full_messages_for(:name).each do |message| %>
-      <div><%= message %></div>
-    <% end %>
-  </label>
-  <label for="email">
-    Email
-    <%= form.email_field :email, required: true %>
-    <% @user.errors.full_messages_for(:email).each do |message| %>
-      <div><%= message %></div>
-    <% end %>
-  </label>
-  <label for="password">
-    Password
-    <%= form.password_field :password, required: true %>
-    <% @user.errors.full_messages_for(:password).each do |message| %>
-      <div><%= message %></div>
-    <% end %>
-  </label>
-  <label for="password_confirmation">
-    Password Confirmation
-    <%= form.password_field :password_confirmation, required: true %>
-    <% @user.errors.full_messages_for(:password_confirmation).each do |message| %>
-      <div><%= message %></div>
-    <% end %>
-  </label>
-  <%= form.submit "Sign Up" %>
-<% end %>
+<%= render "shared/sign_up" %>

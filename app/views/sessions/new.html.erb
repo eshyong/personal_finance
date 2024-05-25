@@ -1,15 +1,20 @@
+<%= render "shared/navbar" %>
+
 <% if flash[:alert] %>
   <div class="alert"><%= flash[:alert] %></div>
 <% end %>
 
-<%= form_with url: login_path, scope: :user do |form| %>
-  <label for="email">
-    Email
-    <%= form.email_field :email, required: true %>
-  </label>
-  <label for="password">
-    Password
-    <%= form.password_field :password, required: true %>
-  </label>
-  <%= form.submit "Sign In" %>
-<% end %>
+<section class="login">
+  <h2 class="login">Log in</h2>
+  <%= form_with url: login_path, scope: :user do |form| %>
+    <label for="email">
+      Email
+      <%= form.email_field :email, required: true %>
+    </label>
+    <label for="password">
+      Password
+      <%= form.password_field :password, required: true %>
+    </label>
+    <%= form.submit "Log in" %>
+  <% end %>
+</section>

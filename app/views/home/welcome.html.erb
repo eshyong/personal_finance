@@ -8,6 +8,10 @@
   </div>
 
   <article class="call-to-action">
-    <%= render "shared/sign_up" %>
+    <% if user_signed_in? %>
+      <%= button_to "Go to dashboard", dashboard_index_path, method: :get, class: :"dashboard-btn" %>
+    <% else %>
+      <%= render "shared/sign_up" %>
+    <% end%>
   </article>
 </div>

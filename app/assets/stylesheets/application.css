@@ -20,7 +20,7 @@ section.hero {
     text-wrap: balance;
 }
 
-.sign-up, .login, div.description, article.call-to-action {
+.sign-up, .login, div.description, button.dashboard-btn {
     margin: auto;
     width: 50%;
 }

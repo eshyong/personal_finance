@@ -140,14 +140,20 @@ class StripeController < ApplicationController
 
     if txn.status_transitions&.posted_at.present?
       transaction[:posted_at] = Time.at(txn.status_transitions.posted_at).utc
+    else
+      transaction[:posted_at] = nil
     end
 
     if txn.status_transitions&.void_at.present?
       transaction[:void_at] = Time.at(txn.status_transitions.void_at).utc
+    else
+      transaction[:void_at] = nil
     end
 
     if txn.transacted_at.present?
       transaction[:transacted_at] = Time.at(txn.transacted_at).utc
+    else
+      transaction[:transacted_at] = nil
     end
 
     transaction

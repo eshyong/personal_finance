@@ -2,7 +2,7 @@ class StripeController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:webhooks]
 
   def link_accounts
-    unless current_user.present?
+    unless user_signed_in?
       render json: {error: "Unauthorized"}, status: :unauthorized
     end
 

@@ -11,7 +11,7 @@ class UsersController < ApplicationController
       @user.send_confirmation_email!
       redirect_to root_path, notice: "A confirmation email has been sent to your registered email."
     else
-      flash.now[:alert] = "Unable to sign up user"
+      flash.now.alert = "Unable to sign up user"
       render :new, status: :unprocessable_entity
     end
   end

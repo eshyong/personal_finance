@@ -1,5 +1,8 @@
-
 <%= render "shared/navbar" %>
+
+<% if flash[:notice] %>
+  <div class="alert alert-success"><%= flash[:notice] %></div>
+<% end%>
 
 <h1>Dashboard</h1>
 <p>Welcome, <%= current_user.email %></p>

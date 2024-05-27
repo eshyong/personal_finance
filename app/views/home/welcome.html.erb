@@ -1,5 +1,9 @@
 <%= render "shared/navbar" %>
 
+<% if flash[:notice] %>
+  <div class="alert alert-success"><%= flash[:notice] %></div>
+<% end%>
+
 <section class="hero">
   <h1>Personal Finance Tracker</h1>
   <div class="description">

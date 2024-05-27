@@ -5,14 +5,14 @@
       Full Name
       <%= form.text_field :name, required: true%>
       <% @user.errors.full_messages_for(:name).each do |message| %>
-        <div><%= message %></div>
+        <small class="error"><%= message %></small>
       <% end %>
     </label>
     <label for="email">
       Email
       <%= form.email_field :email, required: true %>
       <% @user.errors.full_messages_for(:email).each do |message| %>
-        <div><%= message %></div>
+        <small class="error"><%= message %></small>
       <% end %>
     </label>
     <label for="password">
@@ -26,7 +26,7 @@
       Password Confirmation
       <%= form.password_field :password_confirmation, required: true %>
       <% @user.errors.full_messages_for(:password_confirmation).each do |message| %>
-        <div><%= message %></div>
+        <small class="error"><%= message %></small>
       <% end %>
     </label>
     <%= form.submit "Sign up" %>

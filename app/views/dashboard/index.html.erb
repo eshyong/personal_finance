@@ -18,7 +18,7 @@
       <strong>Top 5 expenses this month</strong>
       <ul>
         <% account.top_expenses_this_month.each do |txn| %>
-          <li><%= txn.description %>: <%= txn.amount %></li>
+          <li><%= txn.description %>: <%= txn.get_amount_in_dollars %></li>
         <% end %>
       </ul>
     </article>

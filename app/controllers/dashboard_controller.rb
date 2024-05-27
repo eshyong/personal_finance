@@ -1,6 +1,8 @@
 class DashboardController < ApplicationController
   def index
-    flash.keep
+    if performed?
+      flash.keep
+    end
 
     unless user_signed_in?
       redirect_to home_welcome_path

@@ -5,7 +5,7 @@
     <strong><%= @account.institution_name %> (<%= @account.last4 %>): </strong>
     $<%= @account.get_balance_in_dollars %>
   </div>
-  <%= @account.subcategory.capitalize %> account
+  <%= @account.subcategory.humanize %> account
   <hr />
   <% if @account.transactions.count == 0 %>
     <p>No transactions found.</p>

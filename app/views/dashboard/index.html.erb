@@ -16,7 +16,7 @@
         <strong><%= account.institution_name %> (<%= account.last4 %>):</strong>
         <%= number_to_currency(account.get_balance_in_dollars) %>
       </div>
-      <%= account.subcategory.capitalize %> account
+      <%= account.subcategory.humanize %> account
       <hr />
       <%= link_to "Account details", financial_account_path(account) %>
     </article>

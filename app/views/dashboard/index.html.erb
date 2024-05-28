@@ -5,22 +5,20 @@
 <% end%>
 
 <h1>Dashboard</h1>
-<p>Welcome, <%= @current_user.email %></p>
+<p>Welcome, <%= @current_user.name %>.</p>
 
 <% if @current_user.financial_accounts.count == 0 %>
   <p>No accounts linked yet.</p>
 <% else %>
   <% @current_user.financial_accounts.each do |account| %>
     <article class="account-card">
-      <strong><%= account.institution_name %> (<%= account.last4 %>): </strong>
-      $<%= account.get_balance_in_dollars %>
+      <div>
+        <strong><%= account.institution_name %> (<%= account.last4 %>): </strong>
+        $<%= account.get_balance_in_dollars %>
+      </div>
+      <%= account.subcategory.capitalize %> account
       <hr />
-      <strong>Top 5 expenses this month</strong>
-      <ul>
-        <% account.top_expenses_this_month.each do |txn| %>
-          <li><%= txn.description %>: <%= txn.get_amount_in_dollars %></li>
-        <% end %>
-      </ul>
+      <%= link_to "Account details", financial_account_path(account) %>
     </article>
   <% end %>
 <% end %>

@@ -13,8 +13,8 @@
   <% @current_user.financial_accounts.each do |account| %>
     <article class="account-card">
       <div>
-        <strong><%= account.institution_name %> (<%= account.last4 %>): </strong>
-        $<%= account.get_balance_in_dollars %>
+        <strong><%= account.institution_name %> (<%= account.last4 %>):</strong>
+        <%= number_to_currency(account.get_balance_in_dollars) %>
       </div>
       <%= account.subcategory.capitalize %> account
       <hr />

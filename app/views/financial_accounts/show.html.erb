@@ -14,7 +14,7 @@
     <ul>
       <% @account.transactions.each do |t| %>
         <li>
-          (<%= t.format_transacted_at %>) <%= t.description %>:
+          (<%= t.format_transacted_at %>) <%= t.description %> (<%= t.status %>):
           <%= number_to_currency(t.get_amount_in_dollars) %>
         </li>
       <% end %>

@@ -71,7 +71,7 @@ class FinancialAccountService
       FinancialAccount.transaction do
         new_txns = create_transactions_from_stripe(account.id, object.id)
         Transaction.upsert_all(new_txns, unique_by: :stripe_transaction_id)
-        logger.info("#{caller_name}: inserted #{new_txns.count} transactions")
+        logger.info("#{caller_name}: upserted #{new_txns.count} transactions")
         account.update!(last_transaction_refresh: transaction_refresh)
       end
     end

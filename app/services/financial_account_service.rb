@@ -43,7 +43,7 @@ class FinancialAccountService
         )
       end
 
-      account.update!(balance: object&.balance&.current&.usd)  # We only use USD for now
+      account.update!(balance: object.balance.current.usd)  # We only use USD for now
     end
 
     def import_transactions_from_stripe!(object)

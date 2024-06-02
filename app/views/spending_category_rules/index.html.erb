@@ -1,5 +1,6 @@
 <%= render "shared/navbar" %>
 
+<%# TODO: allow editing %>
 <% @rules.each do |r| %>
   <p><%= r.pattern %>: <%= r.spending_category.humanize %></p>
 <% end %>

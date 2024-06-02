@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_05_24_052616) do
+ActiveRecord::Schema[7.1].define(version: 2024_05_31_050708) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -30,6 +30,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_24_052616) do
     t.index ["user_id"], name: "index_financial_accounts_on_user_id"
   end
 
+  create_table "spending_category_rules", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.integer "spending_category"
+    t.string "pattern", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["pattern"], name: "index_spending_category_rules_on_pattern", unique: true
+    t.index ["user_id"], name: "index_spending_category_rules_on_user_id"
+  end
+
   create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "financial_account_id", null: false
     t.bigint "amount"
@@ -42,6 +52,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_24_052616) do
     t.datetime "transacted_at"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "spending_category"
     t.index ["financial_account_id"], name: "index_transactions_on_financial_account_id"
     t.index ["stripe_transaction_id"], name: "index_transactions_on_stripe_transaction_id", unique: true
   end
@@ -59,5 +70,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_05_24_052616) do
   end
 
   add_foreign_key "financial_accounts", "users"
+  add_foreign_key "spending_category_rules", "users"
   add_foreign_key "transactions", "financial_accounts"
 end

@@ -1,12 +1,24 @@
 class Transaction < ApplicationRecord
   belongs_to :financial_account
 
+  SPENDING_CATEGORIES = %i[
+    automotive bills_and_utilities education entertainment fees_and_adjustments gas
+    gifts_and_donations groceries health_and_wellness home miscellaneous personal
+    professional_services shopping travel
+  ]
+
+  enum :spending_category, SPENDING_CATEGORIES
+
   def get_amount_in_dollars
     amount.nil? ? 0.0 : amount / 100.0
   end
 
   def format_transacted_at
     transacted_at.strftime("%b %-d, %Y")
+  end
+
+  def format_spending_category
+    spending_category.nil? ? "" : spending_category.humanize
   end
 
   def self.hash_from_stripe_object(financial_account_id, txn)

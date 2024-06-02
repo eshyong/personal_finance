@@ -1,3 +1,13 @@
+<%= render "shared/navbar" %>
+
+<% if flash[:notice] %>
+  <div class="alert alert-success"><%= flash[:notice] %></div>
+<% end%>
+
+<% if flash[:alert] %>
+  <div class="alert alert-danger"><%= flash[:alert] %></div>
+<% end %>
+
 <h1>Account details</h1>
 
 <article class="account-card">
@@ -10,8 +20,9 @@
   <% if @transactions.count == 0 %>
     <p>No transactions found.</p>
   <% else %>
-    <p><strong>Transactions:</strong></p>
-    <input type="search" placeholder="filter transactions" />
+    <input id="search-bar" type="search" placeholder="Search for transactions" />
+    <button id="show-add-rule-modal">Add rule</button>
+    <hr />
     <table>
       <thead>
         <tr>
@@ -19,6 +30,7 @@
           <th scope="col">Description</th>
           <th scope="col">Amount</th>
           <th scope="col">Status</th>
+          <th scope="col">Spending category</th>
         </tr>
       </thead>
       <tbody>
@@ -28,6 +40,7 @@
             <td class="description"><%= t.description %></td>
             <td><%= number_to_currency(t.get_amount_in_dollars) %></td>
             <td><%= t.status %></td>
+            <td><%= t.format_spending_category %></td>
           </tr>
         <% end %>
       </tbody>
@@ -35,8 +48,31 @@
   <% end %>
 </article>
 
+<dialog id="add-rule-modal">
+  <article>
+    <header>
+      <strong>Create a spending category rule</strong>
+    </header>
+    <%= form_for SpendingCategoryRule.new, authenticity_token: true do |f| %>
+      <%= f.label :pattern %>
+      <%= f.text_field :pattern, required: true %>
+      <%= f.label :spending_category %>
+      <%= f.select :spending_category, 
+        Transaction::SPENDING_CATEGORIES.collect {|c| [c.to_s.humanize, c] }, required: true %>
+      <%= check_box_tag :apply_to_existing_transactions, "yes" %>
+      <%= label_tag :apply_to_existing_transactions %>
+      <hr>
+      <footer>
+        <button id="save-rule">Save rule</button>
+        <button id="cancel-rule" class="secondary">Cancel</button>
+      </footer>
+    <% end %>
+  </article>
+</dialog>
+
+
 <script>
-  const searchBar = document.querySelector('input[type="search"]');
+  const searchBar = document.getElementById("search-bar")
   searchBar.addEventListener("input", (event) => {
     const query = event.target.value;
     document.querySelectorAll("td.description").forEach((elem) => {
@@ -47,5 +83,48 @@
         elem.parentElement.setAttribute("hidden", "");
       }
     });
+  });
+
+  const addRuleModal = document.getElementById("add-rule-modal");
+  const showModalButton = document.getElementById("show-add-rule-modal");
+  const saveRuleButton = document.getElementById("save-rule");
+  const cancelRuleButton = document.getElementById("cancel-rule");
+  const html = document.documentElement;
+  const animationTimeout = 400;
+  let isModalVisible = false;
+
+  showModalButton.addEventListener("click", (event) => {
+    addRuleModal.showModal();
+    html.classList.add("modal-is-open", "modal-is-opening");
+    isModalVisible = true;
+
+    setTimeout(() => {
+      html.classList.remove("modal-is-opening");
+    }, animationTimeout);
+  });
+
+  const closeModal = () => {
+    html.classList.add("modal-is-closing");
+    isModalVisible = false;
+
+    setTimeout(() => {
+      addRuleModal.close();
+      html.classList.remove("modal-is-open", "modal-is-closing");
+    }, animationTimeout);
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && isModalVisible) {
+      event.preventDefault();
+      closeModal();
+    }
+  });
+
+  cancelRuleButton.addEventListener("click", (event) => {
+    closeModal();
+  });
+
+  saveRuleButton.addEventListener("click", (event) => {
+    closeModal();
   });
 </script>

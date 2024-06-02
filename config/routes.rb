@@ -16,6 +16,8 @@ Rails.application.routes.draw do
 
   resources :financial_accounts, only: [:index, :show]
 
+  resources :spending_category_rules, only: [:index, :show, :create, :destroy]
+
   get "login", to: "sessions#new", as: :login
   post "login", to: "sessions#create"
   delete "logout", to: "sessions#destroy", as: :logout

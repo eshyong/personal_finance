@@ -4,6 +4,7 @@ class User < ApplicationRecord
   before_destroy :delete_stripe_customer
 
   has_many :financial_accounts, dependent: :destroy
+  has_many :spending_category_rules, dependent: :destroy
 
   validates :name, presence: true
   validates :email, presence: true

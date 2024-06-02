@@ -1,7 +1,7 @@
 class SpendingCategoryRulesService
   class << self
     def apply_rule_to_existing_transactions!(rule, user)
-      # TODO: avoid quadratic time complexity...
+      # TODO: avoid cubic time complexity...
       rules = user.spending_category_rules
       user.financial_accounts.each do |fa|
         fa.transactions.each do |t|

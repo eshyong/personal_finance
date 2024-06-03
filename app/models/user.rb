@@ -12,6 +12,10 @@ class User < ApplicationRecord
 
   MAILER_FROM_EMAIL = "no-reply@gmail.com"
 
+  def net_worth
+    financial_accounts.map(&:balance).select(&:present?).reduce(&:+) / 100.0
+  end
+
   def confirm!
     update_columns(confirmed_at: Time.current)
   end

@@ -10,6 +10,12 @@
 <% if @current_user.financial_accounts.count == 0 %>
   <p>No accounts linked yet.</p>
 <% else %>
+  <article>
+    <p>
+      <strong>Net worth:</strong>
+      <%= number_to_currency(@current_user.net_worth) %>
+    </p>
+  </article>
   <% @current_user.financial_accounts.each do |account| %>
     <article class="account-card">
       <div>

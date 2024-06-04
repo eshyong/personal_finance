@@ -1,3 +1,47 @@
 <%= render "shared/navbar" %>
 
 <h1>Spending summary</h1>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div>
+  <p><strong>Yearly spending by category</strong></p>
+</div>
+<div>
+  <canvas id="spending-categories-pie-chart"></canvas>
+</div>
+
+<script>
+  const ctx = document.getElementById('spending-categories-pie-chart');
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthlySpending = Array(12).fill(0);
+  const yearlySpending = {};
+  const categories = {};
+
+  fetch("<%= financial_account_transactions_path(@account) %>")
+    .then((response) => response.json())
+    .then((data) => {
+      data = data.filter((t) => t.amount <= 0);
+      for (const t of data) {
+        const date = new Date(t.transacted_at);
+        const month = date.getMonth();
+        const category = t.spending_category;
+        const amount = Math.abs(t.amount) / 100.0;
+
+        categories[category] = true;
+        monthlySpending[month] += amount;
+        yearlySpending[category] = (yearlySpending[category] || 0) + amount;
+      }
+
+      const dataPoints = [];
+      new Chart(ctx, {
+        type: "doughnut",
+        data: {
+          labels: Object.keys(yearlySpending),
+          datasets: [{
+            data: Object.values(yearlySpending),
+          }]
+        }
+      });
+    });
+</script>

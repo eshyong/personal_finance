@@ -10,5 +10,6 @@ class FinancialAccountsController < ApplicationController
   end
 
   def spending_summary
+    @account = current_user.financial_accounts.find(params[:id])
   end
 end

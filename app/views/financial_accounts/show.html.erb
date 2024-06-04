@@ -60,7 +60,7 @@
       <%= f.text_field :pattern, required: true %>
       <%= f.label :spending_category %>
       <%= f.select :spending_category, 
-        Transaction::SPENDING_CATEGORIES.collect {|c| [c.to_s.humanize, c] }, required: true %>
+        Transaction::SPENDING_CATEGORIES.sort.collect {|c| [c.to_s.humanize, c] }, required: true %>
       <%= check_box_tag :apply_to_existing_transactions, "yes" %>
       <%= label_tag :apply_to_existing_transactions %>
       <hr>

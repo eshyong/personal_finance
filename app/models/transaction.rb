@@ -4,7 +4,7 @@ class Transaction < ApplicationRecord
   SPENDING_CATEGORIES = %i[
     automotive bills_and_utilities education entertainment fees_and_adjustments gas
     gifts_and_donations groceries health_and_wellness home miscellaneous personal
-    professional_services shopping travel
+    professional_services shopping travel food_and_restaurants
   ]
 
   enum :spending_category, SPENDING_CATEGORIES

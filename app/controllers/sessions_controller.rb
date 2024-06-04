@@ -1,12 +1,11 @@
 class SessionsController < ApplicationController
   def new
-    if user_signed_in?
-      redirect_to dashboard_index_path
-    end
+    redirect_to dashboard_index_path if user_signed_in?
   end
 
   def create
     @user = User.find_by(email: params[:user][:email].downcase)
+
     if @user && @user.authenticate(params[:user][:password])
       reset_session
       session[:current_user_id] = @user.id

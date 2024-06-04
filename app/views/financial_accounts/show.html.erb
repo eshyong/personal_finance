@@ -16,13 +16,15 @@
     $<%= @account.get_balance_in_dollars %>
   </div>
   <%= @account.subcategory.humanize %> account
-  <hr />
+  <hr>
+  <%= link_to "Spending summary", spending_summary_path(@account) %>
+  <hr>
   <% if @transactions.count == 0 %>
     <p>No transactions found.</p>
   <% else %>
     <input id="search-bar" type="search" placeholder="Search for transactions" />
     <button id="show-add-rule-modal">Add rule</button>
-    <hr />
+    <hr>
     <table>
       <thead>
         <tr>

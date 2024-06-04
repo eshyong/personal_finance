@@ -14,9 +14,14 @@ Rails.application.routes.draw do
 
   get "confirmations/confirm_email/:confirmation_token", to: "confirmations#confirm_email", as: :confirm_email
 
-  resources :financial_accounts, only: [:index, :show]
+  resources :financial_accounts, only: [:index, :show] do
+    resources :transactions, only: [:index]
+  end
+
+  get "financial_accounts/:id/spending_summary", to: "financial_accounts#spending_summary", as: :spending_summary
 
   resources :spending_category_rules, only: [:index, :show, :create, :destroy]
+
 
   get "login", to: "sessions#new", as: :login
   post "login", to: "sessions#create"

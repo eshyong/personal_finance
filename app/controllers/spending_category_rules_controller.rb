@@ -1,5 +1,7 @@
 class SpendingCategoryRulesController < ApplicationController
   def index
+    redirect_to "home/welcome" unless user_signed_in?
+
     @rules = current_user.spending_category_rules
   end
 
@@ -27,9 +29,11 @@ class SpendingCategoryRulesController < ApplicationController
   end
 
   def show
+    # TODO
   end
 
   def destroy
+    # TODO
   end
 
   private

@@ -8,4 +8,7 @@ class FinancialAccountsController < ApplicationController
     @account = current_user.financial_accounts.find(params[:id])
     @transactions = @account.transactions.order(transacted_at: :desc)
   end
+
+  def spending_summary
+  end
 end
